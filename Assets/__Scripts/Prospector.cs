@@ -1,28 +1,35 @@
-﻿using UnityEngine;
-using UnityEngine.SceneManagement;
-using UnityEngine.UI;
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.SceneManagement;      // This will be used later in the project 
+using UnityEngine.UI;                   // This will be used later in the project 
 
+public class Prospector : MonoBehaviour
+{
+    static public Prospector S;
 
-public class Prospector : MonoBehaviour {
+    [Header("Set in Inspector")]
+    public TextAsset deckXML;
 
-	static public Prospector 	S;
+    [Header("Set Dynamically")]
+    public Deck deck;
 
-	[Header("Set in Inspector")]
-	public TextAsset			deckXML;
+    void Awake()
+    {
+        S = this; // Set up a Singleton for Prospector 
+    }
 
+    void Start()
+    {
+        deck = GetComponent<Deck>(); // Get the Deck 
+        deck.InitDeck(deckXML.text); // Pass DeckXML to it 
+        Deck.Shuffle(ref deck.cards); // This shuffles the deck by reference // a 
 
-	[Header("Set Dynamically")]
-	public Deck					deck;
-
-	void Awake(){
-		S = this;
-	}
-
-	void Start() {
-		deck = GetComponent<Deck> ();
-		deck.InitDeck (deckXML.text);
-	}
-
+        Card c;
+        for (int cNum = 0; cNum < deck.cards.Count; cNum++)
+        {                    // b 
+            c = deck.cards[cNum];
+            c.transform.localPosition = new Vector3((cNum % 13) * 3, cNum / 13 * 4, 0);
+        }
+    }
 }
